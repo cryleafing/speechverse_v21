@@ -1,45 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../sqlite/todo_db_helper.dart';
 
+// USE SQLITE
 class TodoList extends StatefulWidget {
-  const TodoList({super.key, required SharedPreferences prefs}); // accept prefs
-  // as a param
+  const TodoList({super.key});
 
   @override
   _TodoListState createState() => _TodoListState();
 }
 
 class _TodoListState extends State<TodoList> {
-  List<String> _tasks = [];
+  // tasks as a map
+  List<Map<String, dynamic>> _tasks = [];
+
   TextEditingController _textEditingController = TextEditingController();
+
+  final db = DatabaseHelper.instance;
 
   @override
   void initState() {
     super.initState();
+    _loadTasks(); // get tasks from the database
+  }
+
+  // fetch all tasks from the database and update the UI.
+
+  Future<void> _loadTasks() async {
+    _tasks = await db.queryAll();
+    setState(() {}); // Trigger a rebuild of the widget with updated tasks.
+  }
+
+  // add a new task to the database and refresh the task list.
+  void _addTask(String taskTitle) async {
+    await db.insert({'name': taskTitle});
+    _loadTasks();
+    _textEditingController.clear();
+  }
+
+  // remove a task from the database by its ID and refresh the task list.
+  void _removeTask(int id) async {
+    await db.delete(id);
     _loadTasks();
   }
 
-  // load tasks from SharedPreferences
-  Future<void> _loadTasks() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _tasks = prefs.getStringList('tasks') ?? [];
-    });
-  }
-
-  // save tasks to SharedPreferences instance
-  Future<void> _saveTasks() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('tasks', _tasks);
-  }
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('To-Do List'),
+        title: const Text('To-Do List'),
         actions: [
           IconButton(
-            icon: Icon(Icons.home),
+            icon: const Icon(Icons.home),
             onPressed: () {
               // navigate to the home screen
               Navigator.pushNamed(context, '/dashboard');
@@ -50,32 +61,35 @@ class _TodoListState extends State<TodoList> {
       body: Column(
         children: [
           TextField(
-            scrollPadding: EdgeInsets.all(8.0),
+            scrollPadding: const EdgeInsets.all(8.0),
             controller: _textEditingController,
             decoration: InputDecoration(
-              helperStyle: TextStyle(fontFamily: 'OpenSans'),
+              helperStyle: const TextStyle(fontFamily: 'OpenSans'),
               hintText: 'Enter task',
-              contentPadding: EdgeInsets.symmetric(),
-              constraints: BoxConstraints.tight(Size(250, 40)),
+              contentPadding: const EdgeInsets.symmetric(),
+              constraints: BoxConstraints.tight(const Size(250, 40)),
             ),
           ),
           ElevatedButton(
             onPressed: () {
               _addTask(_textEditingController.text);
             },
-            child: Text(style: TextStyle(fontFamily: 'OpenSans'), 'Add Task'),
+            child: const Text(
+                style: TextStyle(fontFamily: 'OpenSans'), 'Add Task'),
           ),
           Expanded(
             child: ListView.builder(
               itemCount: _tasks.length,
               itemBuilder: (context, index) {
                 return Dismissible(
-                  key: Key(_tasks[index]),
+                  key: Key(_tasks[index]['name'].toString()), // cast
                   onDismissed: (direction) {
-                    _removeTask(index);
+                    int taskID = _tasks[index]['_id'];
+                    _removeTask(
+                        taskID); // make sure to remove task by id, index can change
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Task deleted'),
+                        content: const Text('Task deleted'),
                         action: SnackBarAction(
                           label: 'OK',
                           onPressed: () {
@@ -88,41 +102,26 @@ class _TodoListState extends State<TodoList> {
                   background: Container(
                     color: Colors.red,
                     alignment: Alignment.centerRight,
-                    padding: EdgeInsets.only(right: 20.0),
-                    child: Icon(Icons.delete, color: Colors.white),
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: const Icon(Icons.delete, color: Colors.white),
                   ),
                   child: ListTile(
                     tileColor: Theme.of(context).focusColor,
-                    title: Text(_tasks[index]),
+                    title: Text(_tasks[index]['name'].toString()),
                   ),
                 );
               },
             ),
           ),
-          Tooltip(
+          const Tooltip(
             message: 'Swipe left or right to delete tasks',
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               child: Icon(Icons.lightbulb),
             ),
           ),
         ],
       ),
     );
-  }
-
-  void _addTask(String taskTitle) {
-    setState(() {
-      _tasks.add(taskTitle);
-      _textEditingController.clear();
-      _saveTasks(); // make sure to save this to sharedprefs
-    });
-  }
-
-  void _removeTask(int index) {
-    setState(() {
-      _tasks.removeAt(index);
-      _saveTasks(); // Save tasks to SharedPreferences
-    });
   }
 }

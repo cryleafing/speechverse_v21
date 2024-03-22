@@ -47,7 +47,7 @@ class Dashboard extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // Handle button press
+                      Navigator.pushNamed(context, '/createflashcard');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).splashColor,
@@ -146,6 +146,14 @@ class Dashboard extends StatelessWidget {
                 title: const Text('To Do List'),
                 onTap: () {
                   Navigator.pushNamed(context, '/todolist');
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.deck_outlined),
+                title: const Text('Decks'),
+                onTap: () {
+                  // go to decks
+                  Navigator.pushNamed(context, '/decks');
                 },
               ),
               ListTile(
