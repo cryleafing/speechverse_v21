@@ -9,10 +9,7 @@ import 'screens/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  // initialise sharedprefs
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  runApp(MyApp(prefs: prefs));
+  runApp(MyApp());
 }
 // root widget
 
