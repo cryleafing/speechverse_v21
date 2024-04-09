@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:speechverse_v2/screens/createflashcard.dart';
 import 'package:speechverse_v2/sqlite/flashcard_db_helper.dart';
 
+import 'flashcard_detail.dart';
+
 class DecksPage extends StatefulWidget {
   @override
   _DecksPageState createState() => _DecksPageState();
@@ -50,8 +52,9 @@ class _DecksPageState extends State<DecksPage> {
                 return ListTile(
                   title: Text(deck.deckName),
                   onTap: () {
-                    // Handle deck selection here, e.g., navigate to a detail page
-                    // Navigator.of(context).push(MaterialPageRoute(builder: (_) => DeckDetailPage(deck: deck)));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => FlashcardsPage(deck: deck)));
+                    // specific flashcards for a certain deck...
                   },
                 );
               },

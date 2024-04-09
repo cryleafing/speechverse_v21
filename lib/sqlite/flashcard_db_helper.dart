@@ -1,6 +1,38 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+class Flashcard {
+  final int? id;
+  final String frontText;
+  final String backText;
+  final int deckId;
+
+  Flashcard({
+    this.id,
+    required this.frontText,
+    required this.backText,
+    required this.deckId,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'front_text': frontText,
+      'back_text': backText,
+      'deck_id': deckId,
+    };
+  }
+
+  factory Flashcard.fromMap(Map<String, dynamic> map) {
+    return Flashcard(
+      id: map['id'],
+      frontText: map['front_text'],
+      backText: map['back_text'],
+      deckId: map['deck_id'],
+    );
+  }
+}
+
 class FlashcardDatabaseHelper {
   static final FlashcardDatabaseHelper instance =
       FlashcardDatabaseHelper._init();
@@ -94,5 +126,24 @@ class FlashcardDatabaseHelper {
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // Handle database upgrade if needed
+  }
+
+  Future<List<Flashcard>> getFlashcardsForDeck(int? deckId) async {
+    final db = await instance.database;
+
+    final List<Map<String, dynamic>> maps = await db.query(
+      'flashcards',
+      where: 'deck_id = ?',
+      whereArgs: [deckId],
+    );
+
+    return List.generate(maps.length, (i) {
+      return Flashcard(
+        id: maps[i]['id'],
+        frontText: maps[i]['front_text'],
+        backText: maps[i]['back_text'],
+        deckId: maps[i]['deck_id'],
+      );
+    });
   }
 }

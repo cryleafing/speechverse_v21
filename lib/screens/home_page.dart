@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:speechverse_v2/screens/dashboard.dart';
+import 'package:speechverse_v2/screens/login.dart';
 
 class MyHomePage extends StatelessWidget {
   @override
@@ -42,7 +42,7 @@ class MyHomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Dashboard()));
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context)

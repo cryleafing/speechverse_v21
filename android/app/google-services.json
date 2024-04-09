@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "182891395897",
+    "project_id": "speechverse-0",
+    "storage_bucket": "speechverse-0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182891395897:android:6b388836a3d08f5586c6e8",
+        "android_client_info": {
+          "package_name": "com.example.speechverse_v2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEa_kWod0dgDCHwP93os5s2TZ5OvlqavM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
