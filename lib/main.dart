@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:speechverse_v2/screens/decks.dart';
 import 'package:speechverse_v2/screens/flashcard_detail.dart';
 import 'package:speechverse_v2/screens/login.dart';
+import 'package:speechverse_v2/screens/sessionsummary.dart';
 import 'package:speechverse_v2/screens/to_do_list.dart';
+import 'firebase/initialiser.dart';
 import 'screens/createflashcard.dart';
 import 'screens/dashboard.dart';
 import 'screens/home_page.dart';
+import 'screens/flashcardreview.dart';
 import 'app_theme.dart';
 import 'screens/profile.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+
 import 'firebase/auth_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await FirebaseInitializer.initializeFirebase();
   runApp(MyApp());
 }
 // root widget
@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
           'flashcard_overview': (context) => FlashcardsPage(
                 deck: Deck(id: 0, deckName: 'My Deck'),
               ),
-          // Start page
-          // Add more routes later as the pages increase
+          '/flashcard_review': (context) => FlashcardReviewPage(),
+          '/study_stats': (context) => SessionSummary(),
         });
   }
 }

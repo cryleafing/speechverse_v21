@@ -17,7 +17,7 @@ class FlashcardsPage extends StatelessWidget {
         future: FlashcardDatabaseHelper.instance.getFlashcardsForDeck(deck.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error.toString()}'));
@@ -25,7 +25,8 @@ class FlashcardsPage extends StatelessWidget {
           if (snapshot.hasData) {
             List<Flashcard> flashcards = snapshot.data!;
             if (flashcards.isEmpty) {
-              return Center(child: Text('No flashcards found for this deck.'));
+              return const Center(
+                  child: Text('No flashcards found for this deck.'));
             }
             return ListView.builder(
               itemCount: flashcards.length,
@@ -37,7 +38,8 @@ class FlashcardsPage extends StatelessWidget {
               },
             );
           } else {
-            return Center(child: Text('No flashcards found for this deck.'));
+            return const Center(
+                child: Text('No flashcards found for this deck.'));
           }
         },
       ),

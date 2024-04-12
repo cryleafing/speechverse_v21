@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Profile extends StatelessWidget {
-  final user = FirebaseAuth.instance.currentUser; // Get the current user
+  final user = FirebaseAuth.instance.currentUser;
+
+  Profile({super.key}); // Get the current user
 
   @override
   Widget build(BuildContext context) {

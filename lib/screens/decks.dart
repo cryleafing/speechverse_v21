@@ -11,13 +11,13 @@ class DecksPage extends StatefulWidget {
 
 class _DecksPageState extends State<DecksPage> {
   //kKey to identify the FutureBuilder and force rebuilds
-  Key _futureBuilderKey = UniqueKey();
+  final Key _futureBuilderKey = UniqueKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Decks'),
+        title: const Text('Your Decks'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         key: _futureBuilderKey, // Use the key here
@@ -25,7 +25,7 @@ class _DecksPageState extends State<DecksPage> {
         builder: (context, snapshot) {
           // check for loading state, helps inform the user
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           // check for error state
@@ -40,7 +40,7 @@ class _DecksPageState extends State<DecksPage> {
                 snapshot.data!.map((deckMap) => Deck.fromMap(deckMap)).toList();
             if (decks.isEmpty) {
               // Handle the case where the decks list is empty
-              return Center(
+              return const Center(
                   child: Text('No decks found. Start by creating a new one!'));
             }
 
@@ -61,12 +61,12 @@ class _DecksPageState extends State<DecksPage> {
             );
           } else {
             // Handle the case where there's no data (although this should be covered by the isEmpty check above)
-            return Center(child: Text('No decks found.'));
+            return const Center(child: Text('No decks found.'));
           }
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () => _addNewDeck(context),
       ),
     );
@@ -80,22 +80,22 @@ void _addNewDeck(BuildContext context) async {
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text('New Deck'),
+        title: const Text('New Deck'),
         content: TextField(
           controller: _deckTitleController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Deck Title',
           ),
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           TextButton(
-            child: Text('Save'),
+            child: const Text('Save'),
             onPressed: () async {
               String deckTitle = _deckTitleController.text;
               if (deckTitle.isNotEmpty) {
