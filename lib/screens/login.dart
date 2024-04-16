@@ -10,16 +10,16 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  String _errorMessage = ''; // Add an error message field
+  String _errorMessage = ''; // add an error message field when needed later
 
-  // A method to update the error message
+  // inform the user with this method
   void _updateErrorMessage(String message) {
     setState(() {
       _errorMessage = message;
     });
   }
 
-  // Enhanced sign-in method with error handling
+// sign in is almost the same as sign up
   Future<void> _signIn() async {
     try {
       final User? user =
@@ -45,12 +45,12 @@ class _LoginScreenState extends State<LoginScreen> {
         _updateErrorMessage('An error occurred. Please try again later.');
       }
     } catch (e) {
-      // Catch any other errors
+      // catch any other errors
       _updateErrorMessage('An error occurred. Please try again later.');
     }
   }
 
-  // Enhanced sign-up method with error handling
+  // enhanced sign-up method with error handling
   Future<void> _signUp() async {
     try {
       final User? user =

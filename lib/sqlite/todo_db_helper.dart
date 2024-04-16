@@ -32,6 +32,30 @@ class DatabaseHelper {
           ''');
   }
 
+  Future<Map<String, dynamic>?> getItem(int id) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> results = await db.query(
+      'items',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (results.isNotEmpty) {
+      return results.first;
+    } else {
+      return null;
+    }
+  }
+
+  Future<int> update(int id, Map<String, dynamic> row) async {
+    final db = await instance.database;
+    return await db.update(
+      'items',
+      row,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   Future<int> insert(Map<String, dynamic> row) async {
     Database db = await database;
     return await db.insert(_tableName, row);

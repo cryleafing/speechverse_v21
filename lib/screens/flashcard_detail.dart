@@ -7,6 +7,9 @@ class FlashcardsPage extends StatelessWidget {
 
   const FlashcardsPage({Key? key, required this.deck}) : super(key: key);
 
+  // this page loads up decks, will load up the first deck the user makes as a
+  // default
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

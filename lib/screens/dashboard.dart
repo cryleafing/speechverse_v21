@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:speechverse_v2/firebase/session_service.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -97,23 +98,29 @@ class Dashboard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 30),
-            Text(
-              'Study Statistics',
-              style: Theme.of(context).textTheme.bodySmall,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0), // Square shape
+            Row(
+              children: [
+                const SizedBox(
+                  height: 20,
+                  width: 30,
                 ),
-                minimumSize: Size(200, 50), // Button size
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/study_stats');
-              },
-              child: Text('View Study Statistics'),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0), // Square shape
+                    ),
+                    minimumSize: const Size(200, 50), // Button size
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/study_stats');
+                  },
+                  child: const Text('View Study Statistics'),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                const PointsDisplay(),
+              ],
             ),
           ]),
         ),
@@ -162,16 +169,42 @@ class Dashboard extends StatelessWidget {
                   Navigator.pushNamed(context, '/decks');
                 },
               ),
-              ListTile(
-                leading: const Icon(Icons.settings),
-                title: const Text('Settings'),
-                onTap: () {
-                  // go to settings, this should use sqlite...
-                  // settings should be able to clear the flashcard decks
-                },
-              ),
             ],
           ),
         ));
+  }
+}
+
+class PointsDisplay extends StatefulWidget {
+  const PointsDisplay({super.key});
+
+  @override
+  _PointsDisplayState createState() => _PointsDisplayState();
+}
+
+class _PointsDisplayState extends State<PointsDisplay> {
+  int _points = 0;
+
+  // fake points system for now
+  @override
+  void initState() {
+    super.initState();
+    _loadPoints();
+  }
+
+  void _loadPoints() async {
+    var service = PointsService();
+    int points = await service.fetchPoints();
+    setState(() {
+      _points = points;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "Points: $_points",
+      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    );
   }
 }

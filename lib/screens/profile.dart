@@ -4,11 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 class Profile extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser;
 
-  Profile({super.key}); // Get the current user
+  Profile({super.key}); // get user info
 
   @override
   Widget build(BuildContext context) {
-    final email = user?.email ?? 'No email'; // Safely access the email
+    final email = user?.email ?? 'No email'; // safely access the email
 
     return Scaffold(
       appBar: AppBar(
@@ -19,13 +19,12 @@ class Profile extends StatelessWidget {
         children: [
           const CircleAvatar(
             radius: 50,
-            backgroundImage:
-                AssetImage('assets/images/profile_placeholder.jpg'),
+            backgroundImage: AssetImage(
+                'assets/images/profile_placeholder.jpg'), // blue circle
           ),
           const SizedBox(height: 16.0),
           Text(
-            user?.displayName ??
-                'Username', // If you want to display the user's name and have it set up
+            user?.displayName ?? 'Username',
             style: const TextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.bold,
@@ -33,7 +32,7 @@ class Profile extends StatelessWidget {
           ),
           const SizedBox(height: 8.0),
           Text(
-            email, // Use the user's email here
+            email, //  user's email here
             style: const TextStyle(
               fontSize: 16.0,
             ),
@@ -43,14 +42,14 @@ class Profile extends StatelessWidget {
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {
-              // settings screen that can be implemented later
+              // settings, does not do anything
             },
           ),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () {
-              FirebaseAuth.instance.signOut(); // Log out the user
+              FirebaseAuth.instance.signOut(); // log out the user
               Navigator.pushNamedAndRemoveUntil(
                   context, '/getstarted', (route) => false);
             },

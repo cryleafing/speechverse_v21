@@ -11,7 +11,6 @@ import 'screens/home_page.dart';
 import 'screens/flashcardreview.dart';
 import 'app_theme.dart';
 import 'screens/profile.dart';
-
 import 'firebase/auth_wrapper.dart';
 
 void main() async {
@@ -29,9 +28,9 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.darkTheme,
         home: const AuthWrapper(),
         debugShowCheckedModeBanner: false,
-        initialRoute: '/getstarted', // Specify the initial route
+        initialRoute: '/getstarted', // initial route
         routes: {
-          '/getstarted': (context) => MyHomePage(), // Home page
+          '/getstarted': (context) => MyHomePage(), // landing
           '/login': (context) => LoginScreen(),
           '/dashboard': (context) => const Dashboard(),
           '/todolist': (context) => const TodoList(),
@@ -41,8 +40,8 @@ class MyApp extends StatelessWidget {
           'flashcard_overview': (context) => FlashcardsPage(
                 deck: Deck(id: 0, deckName: 'My Deck'),
               ),
-          '/flashcard_review': (context) => FlashcardReviewPage(),
-          '/study_stats': (context) => SessionSummary(),
+          '/flashcard_review': (context) => const FlashcardReviewPage(),
+          '/study_stats': (context) => const SessionSummary(),
         });
   }
 }

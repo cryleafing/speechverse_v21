@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 import '../sqlite/flashcard_db_helper.dart';
 import 'dart:async'; // for timer integration
+import '/tts_service.dart'; // for text to speech...
 
 class FlashcardReviewPage extends StatefulWidget {
   const FlashcardReviewPage({super.key});
@@ -20,6 +21,8 @@ class _FlashcardReviewPageState extends State<FlashcardReviewPage> {
   List<Map<String, dynamic>> decks = [];
   int? currentDeckId;
 
+  final TtsService _ttsService = TtsService(); // initialise tts
+  bool isFront = true;
   Timer? _timer;
   int _seconds = 0;
   // start timer based on how long users spend on this page...
@@ -35,9 +38,9 @@ class _FlashcardReviewPageState extends State<FlashcardReviewPage> {
   void stopTimer() {
     if (_timer != null) {
       _timer!.cancel();
-      int sessionDuration = _seconds; // Capture the duration before resetting
+      int sessionDuration = _seconds; // gapture the duration before resetting
       _seconds = 0; // Reset timer
-      storeSessionTime(sessionDuration); // Store the session time
+      storeSessionTime(sessionDuration); // store the session time
     }
   }
 
@@ -59,7 +62,7 @@ class _FlashcardReviewPageState extends State<FlashcardReviewPage> {
   void storeSessionTime(int seconds) {
     var userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId != null) {
-      // Ensure we have a user
+      // make sure theres a user, firebaseauth...
       var ref = FirebaseDatabase.instance
           .ref("study_sessions/${FirebaseAuth.instance.currentUser?.uid}");
       ref
@@ -74,6 +77,7 @@ class _FlashcardReviewPageState extends State<FlashcardReviewPage> {
   }
 
   Future<void> _loadDecks() async {
+    // retrieve
     final deckList = await FlashcardDatabaseHelper.instance.getAllDecks();
     if (deckList.isNotEmpty) {
       setState(() {
@@ -95,11 +99,24 @@ class _FlashcardReviewPageState extends State<FlashcardReviewPage> {
     }
   }
 
+  // TTS will read only the front text.
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Review Flashcards'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.volume_up), // should speak out the text
+            onPressed: () {
+              String textToSpeak = isFront
+                  ? flashcards[currentIndex].frontText //  speak string
+                  : flashcards[currentIndex].backText;
+              _ttsService.speak(textToSpeak);
+            },
+          ),
+        ],
       ),
       body: decks.isEmpty
           ? const CircularProgressIndicator()
@@ -127,37 +144,43 @@ class _FlashcardReviewPageState extends State<FlashcardReviewPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              FlipCard(
-                                front: Card(
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.9,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.7,
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        flashcards[currentIndex].frontText,
-                                        style: const TextStyle(fontSize: 20),
-                                        textAlign: TextAlign.center,
+                              GestureDetector(
+                                onTap: () => setState(() => isFront = !isFront),
+                                child: FlipCard(
+                                  direction: FlipDirection.HORIZONTAL,
+                                  front: Card(
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.7,
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          flashcards[currentIndex].frontText,
+                                          style: const TextStyle(fontSize: 20),
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                back: Card(
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.9,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.7,
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        flashcards[currentIndex].backText,
-                                        style: const TextStyle(fontSize: 20),
-                                        textAlign: TextAlign.center,
+                                  back: Card(
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.7,
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          flashcards[currentIndex].backText,
+                                          style: const TextStyle(fontSize: 20),
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -172,6 +195,8 @@ class _FlashcardReviewPageState extends State<FlashcardReviewPage> {
                                         ? () {
                                             setState(() {
                                               currentIndex--;
+                                              isFront =
+                                                  true; // reset to front when changing cards
                                             });
                                           }
                                         : null,
@@ -183,6 +208,7 @@ class _FlashcardReviewPageState extends State<FlashcardReviewPage> {
                                             ? () {
                                                 setState(() {
                                                   currentIndex++;
+                                                  isFront = true;
                                                 });
                                               }
                                             : null,

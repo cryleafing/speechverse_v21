@@ -4,15 +4,14 @@ class AppTheme {
   static final darkTheme = ThemeData(
     useMaterial3: true,
     // colours for material 3, setup
-    // Define the default brightness and colors.
+    // define the default brightness and colors.
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Color.fromARGB(255, 31, 67, 107), // custom swatch
+      seedColor: const Color.fromARGB(255, 31, 67, 107), // custom swatch
       // will contrast a dark background
       brightness: Brightness.dark,
     ),
     fontFamily: 'RedHatDisplay',
-    // Define the default `TextTheme`. Use this to specify the default
-    // text styling for headlines, titles, bodies of text, and more.
+    // chosen text asset included in files..
     textTheme: const TextTheme(
       displayLarge: TextStyle(
         fontSize: 60,

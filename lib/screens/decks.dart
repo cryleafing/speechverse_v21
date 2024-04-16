@@ -5,6 +5,8 @@ import 'package:speechverse_v2/sqlite/flashcard_db_helper.dart';
 import 'flashcard_detail.dart';
 
 class DecksPage extends StatefulWidget {
+  const DecksPage({super.key});
+
   @override
   _DecksPageState createState() => _DecksPageState();
 }
@@ -39,12 +41,13 @@ class _DecksPageState extends State<DecksPage> {
             List<Deck> decks =
                 snapshot.data!.map((deckMap) => Deck.fromMap(deckMap)).toList();
             if (decks.isEmpty) {
-              // Handle the case where the decks list is empty
+              // handle the case where the decks list is empty,
+              // return a text widget
               return const Center(
                   child: Text('No decks found. Start by creating a new one!'));
             }
 
-            // Display the list of decks
+            // display the list of decks
             return ListView.builder(
               itemCount: decks.length,
               itemBuilder: (context, index) {
@@ -60,7 +63,7 @@ class _DecksPageState extends State<DecksPage> {
               },
             );
           } else {
-            // Handle the case where there's no data (although this should be covered by the isEmpty check above)
+            // inform the user if there are no decks made, prompt
             return const Center(child: Text('No decks found.'));
           }
         },
@@ -99,11 +102,11 @@ void _addNewDeck(BuildContext context) async {
             onPressed: () async {
               String deckTitle = _deckTitleController.text;
               if (deckTitle.isNotEmpty) {
-                // Call method to save the new deck to the database
+                // call method to save the new deck to the database
                 await FlashcardDatabaseHelper.instance.addDeck(deckTitle);
 
-                // Update the UI or refresh the deck list
-                Navigator.of(context).pop();
+                // update the UI or refresh the deck list
+                Navigator.pop(context);
               }
             },
           ),

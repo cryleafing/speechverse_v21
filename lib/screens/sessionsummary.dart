@@ -16,9 +16,10 @@ class _SessionSummaryState extends State<SessionSummary> {
   void initState() {
     super.initState();
     _studyTimesFuture =
-        fetchDailyStudyTime(); // Ensure this method is available and correct
+        fetchDailyStudyTime(); // ensure this method is available and correct
   }
 
+  // see study times
   @override
   Widget build(BuildContext context) {
     return Scaffold(

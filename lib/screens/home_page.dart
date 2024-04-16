@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:speechverse_v2/screens/login.dart';
 
 class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
+
+  // landing page for personality!
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context)
             .colorScheme
-            .background, // Use custom background color
+            .background, // use custom background color
         title: Text(
           'Get Started',
           style: Theme.of(context).textTheme.bodyLarge!,

@@ -146,4 +146,6 @@ class FlashcardDatabaseHelper {
       );
     });
   }
+
+  // helper methods for the test
 }
